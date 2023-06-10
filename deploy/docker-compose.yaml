@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+
+  client:
+    container_name: videochat_client
+    build: ../client
+    volumes:
+      - ../client:/app
+    ports:
+      - "3000:3000"
+
+  backend:
+    container_name: videochat_backend
+    build: ../backend
+    volumes:
+      - ../backend:/app
+    ports:
+      - "5000:5000"
+
+#  livekit:
+#    container_name: videochat_livekit
+#    build: ../livekit
+#    ports:
+#      - "30000-40000:30000-40000"
