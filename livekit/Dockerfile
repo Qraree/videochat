@@ -1,15 +1,7 @@
-FROM livekit/livekit-server:latest
+FROM livekit/livekit-server:v1.2.0
 
-COPY ./livekit.yaml /livekit.yaml
+#COPY ./livekit.local.yaml /livekit.yaml
 
-ARG LIVEKIT_IP
-ARG LIVEKIT_REDIS_ADDRESS
-ARG LIVEKIT_API_KEY
-ARG LIVEKIT_API_SECRET
+CMD [ "--config", "/livekit.yaml" ]
 
-RUN sed -i "s/0.0.0.0/$LIVEKIT_IP/g" /livekit.yaml
-RUN sed -i "s/livekitredisaddress/$LIVEKIT_REDIS_ADDRESS/g" /livekit.yaml
-RUN sed -i "s/apikey/$LIVEKIT_API_KEY/g" /livekit.yaml
-RUN sed -i "s/apisecret/$LIVEKIT_API_SECRET/g" /livekit.yaml
-
-CMD ["--config", "/livekit.yaml"]
+#CMD [ "livekit-server", "--dev" ]
