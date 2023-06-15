@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import {socket} from "./socket";
+import {RouterProvider} from "react-router-dom";
+import {router} from "./router";
 
 function App() {
     const [isConnected, setIsConnected] = useState(socket.connected);
@@ -35,7 +37,7 @@ function App() {
 
     return (
     <div className="App">
-      <button onClick={sendMessage}>Hello server</button>
+      <RouterProvider router={router} />
     </div>
   );
 }
