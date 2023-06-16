@@ -4,10 +4,10 @@ services:
 
   client:
     container_name: videochat_client
-    build: ../client
+    build: ../client_next
     volumes:
-      - ../client:/app
-    env_file: ../client/.env
+      - ../client_next:/app
+    env_file: ../client_next/.env.local
     ports:
       - "3000:3000"
 
