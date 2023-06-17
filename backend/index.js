@@ -20,6 +20,14 @@ io.on("connection", (socket) => {
     socket.on("message", (...args) => {
         socket.emit("server-message", "WHAT DO YOU WANT??");
     });
+
+    socket.on("chatEnter", (name) => {
+        console.log(`${name} entered the chat!`)
+    })
+
+    socket.on("disconnect", () => {
+        console.log("user was disconnected");
+    })
 });
 
 const port = 5000;
