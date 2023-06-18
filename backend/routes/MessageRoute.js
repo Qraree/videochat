@@ -18,8 +18,8 @@ router.post('/messages', async (req, res) => {
     }
 })
 
-router.get('/messages', (req, res) => {
-    return res.json({message: "Get all messages"});
+router.get('/messages', async (req, res) => {
+    return res.json({message: "Hellooo"})
 })
 
 module.exports = router

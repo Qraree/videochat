@@ -15,9 +15,7 @@ const Login = () => {
 
     const enterRoom = () => {
         router.push('room');
-
         socket.emit("chatEnter", nameInput);
-
         sessionStorage.setItem("username", nameInput);
     }
 
