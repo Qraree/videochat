@@ -3,8 +3,10 @@ const express = require('express');
 const { createServer } = require("http");
 const cors = require('cors')
 const mongoose = require('mongoose');
+const Message = require('./models/Message');
 const messageRouter = require('./routes/MessageRoute');
 const { Server } = require("socket.io");
+const { AccessToken } = require('livekit-server-sdk');
 
 
 const app = express();
@@ -14,15 +16,45 @@ const io =  new Server(httpServer, {
         origin: "*"
     }});
 
+const roomStack = [];
+const roomName = 'room';
+
 io.on("connection", (socket) => {
     console.log("client connected");
 
     socket.on("message", (...args) => {
-        socket.emit("server-message", "WHAT DO YOU WANT??");
+        socket.emit("server-message", "WHAT DdO YOU hWANT??");
     });
 
-    socket.on("chatEnter", (name) => {
+    socket.on("chatEnter", async (name) => {
         console.log(`${name} entered the chat!`)
+        roomStack.push(name);
+    })
+
+    socket.on("getToken", (name) => {
+        const at = new AccessToken('devkey', 'secret', {
+            identity: name,
+        });
+        at.addGrant({ roomJoin: true, room: roomName, canPublish: true, canSubscribe: true });
+        const token = at.toJwt();
+
+        socket.emit('serverToken', token)
+    })
+
+    socket.on("getAllMessages", async () => {
+        const messages = await Message.find({});
+        console.log(messages);
+        socket.emit("allMessages", messages);
+    })
+
+    socket.on("sendMessage", async (message) => {
+        await Message.create(message)
+        io.emit("sendMessageServer", message)
+    })
+
+    socket.on("exitRoom", () => {
+        roomStack.pop();
+        console.log(roomStack);
     })
 
     socket.on("disconnect", () => {
