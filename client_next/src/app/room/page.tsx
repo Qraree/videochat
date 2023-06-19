@@ -1,19 +1,18 @@
 "use client"
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {IMessage} from "@/types/IMessage";
 import Message from "@/components/Message";
-import {guidGenerator} from "@/helpers/random";
 import {useRouter} from "next/navigation";
 import {socket} from "@/socket";
-import { LiveKitRoom } from '@livekit/react-components';
-
+import { LiveKitRoom, VideoConference } from "@livekit/components-react";
 const Room = () => {
     const [messageInput, setMessageInput] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
+    const [livekitToken, setLivekitToken] = useState('');
     const router = useRouter();
+    const messageListRef = useRef(null);
 
     const url = 'wss://127.0.0.1:7880';
-    const token = 'your_token';
 
     const [messages, setMessages] = useState<IMessage[]>([])
 
@@ -25,12 +24,12 @@ const Room = () => {
 
     useEffect(() => {
         socket.on("allMessages", (messages) => {
-            console.log(messages);
             setMessages(messages);
         })
 
         socket.on("serverToken", (token) => {
             console.log(token);
+            // setLivekitToken(token);
         })
 
     }, [socket])
@@ -79,7 +78,8 @@ const Room = () => {
     return (
         <div className="w-full h-screen text-white bg-stone-800 mt-0 relative overflow-auto flex flex-row">
             <div className="w-5/6 h-full bg-red-200 flex flex-col justify-center items-center">
-                <div className="w-10/12 h-4/5 bg-sky-500 mb-5"></div>
+                <div className="w-10/12 h-4/5 bg-sky-500 mb-5">
+                </div>
                 <div className="w-2/12 h-12 bg-amber-200 flex flex-row justify-center text-black">
                     <button onClick={exitRoom}>Exit</button>
                 </div>
@@ -92,7 +92,7 @@ const Room = () => {
                     Chat
                 </div>
                 <hr />
-                <div className="h-4/5 bg-sky-500 p-2 flex flex-col">
+                <div className="h-4/5 bg-sky-500 p-2 flex flex-col overflow-y-scroll no-scrollbar" ref={messageListRef}>
                     {messages.map((message) => (
                         <Message message={message} username={userName} key={message._id}/>
                     ))}
@@ -106,5 +106,6 @@ const Room = () => {
         </div>
     );
 };
+
 
 export default Room;
