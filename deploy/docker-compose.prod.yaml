@@ -5,9 +5,7 @@ services:
   client:
     container_name: videochat_client
     build: ../client_next
-    volumes:
-      - ../client_next:/app
-    env_file: ../client_next/.env.development.local
+    env_file: ../client_next/.env.production.local
     ports:
       - "3000:3000"
 
@@ -15,8 +13,6 @@ services:
     container_name: videochat_backend
     build: ../backend
     env_file: ../backend/.env
-    volumes:
-      - ../backend:/app
     ports:
       - "5000:5000"
     links:

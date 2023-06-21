@@ -1,6 +1,5 @@
 import { io } from 'socket.io-client';
 
-// const URL = process.env.SERVER_URL || "localhost:5000";
-const URL = "localhost:5000";
+const URL = process.env.NEXT_PUBLIC_SERVER_URL || "localhost:2000";
 
 export const socket = io(URL);

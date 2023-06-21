@@ -4,9 +4,9 @@ const { createServer } = require("http");
 const cors = require('cors')
 const mongoose = require('mongoose');
 const Message = require('./models/Message');
-const messageRouter = require('./routes/MessageRoute');
 const { Server } = require("socket.io");
 const { AccessToken } = require('livekit-server-sdk');
+// const { getLivekitToken } = require('./services/getLivekitToken')
 
 
 const app = express();
@@ -32,7 +32,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on("getToken", (name) => {
-        const at = new AccessToken('devkey', 'secret', {
+        const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, {
             identity: name,
         });
         at.addGrant({ roomJoin: true, room: roomName, canPublish: true, canSubscribe: true });
@@ -72,7 +72,6 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 });
-app.use("/", messageRouter);
 
 
 

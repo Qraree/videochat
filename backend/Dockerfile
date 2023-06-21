@@ -8,6 +8,6 @@ RUN npm install
 
 RUN npm cache clean --force
 
-COPY index.js ./
+COPY . .
 
 CMD ["npm", "run", "start"]
