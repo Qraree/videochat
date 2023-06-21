@@ -4,15 +4,20 @@ import {IMessage} from "@/types/IMessage";
 import Message from "@/components/Message";
 import {useRouter} from "next/navigation";
 import {socket} from "@/socket";
-import { LiveKitRoom, VideoConference } from "@livekit/components-react";
-const Room = () => {
+import {LiveKitRoom, VideoConference, ControlBar, RoomAudioRenderer} from "@livekit/components-react";
+import { Room } from 'livekit-client'
+import Stage from "@/components/Stage";
+
+const RoomComponent = () => {
     const [messageInput, setMessageInput] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
     const [livekitToken, setLivekitToken] = useState('');
     const router = useRouter();
     const messageListRef = useRef(null);
 
-    const url = 'wss://127.0.0.1:7880';
+    const [room] = useState(new Room());
+    const [isConnected, setIsConnected] = useState(false);
+    const [connect, setConnect] = useState(false);
 
     const [messages, setMessages] = useState<IMessage[]>([])
 
@@ -29,7 +34,7 @@ const Room = () => {
 
         socket.on("serverToken", (token) => {
             console.log(token);
-            // setLivekitToken(token);
+            setLivekitToken(token);
         })
 
     }, [socket])
@@ -78,7 +83,22 @@ const Room = () => {
     return (
         <div className="w-full h-screen text-white bg-stone-800 mt-0 relative overflow-auto flex flex-row">
             <div className="w-5/6 h-full bg-red-200 flex flex-col justify-center items-center">
-                <div className="w-10/12 h-4/5 bg-sky-500 mb-5">
+                <div className="w-10/12 h-4/5 bg-sky-500 mb-5"  >
+                    <LiveKitRoom
+                        room={room}
+                        serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
+                        token={livekitToken}
+                        onConnected={() => setIsConnected(true)}
+                        connect={true}
+                        video={true}
+                        audio={true}
+                    >
+                        <RoomAudioRenderer />
+                        {isConnected && <Stage />}
+                        {/*<VideoConference />*/}
+                        <ControlBar />
+                    </LiveKitRoom>
+
                 </div>
                 <div className="w-2/12 h-12 bg-amber-200 flex flex-row justify-center text-black">
                     <button onClick={exitRoom}>Exit</button>
@@ -108,4 +128,4 @@ const Room = () => {
 };
 
 
-export default Room;
+export default RoomComponent;
