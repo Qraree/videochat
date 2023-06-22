@@ -29,6 +29,14 @@ services:
     image: mongo:4
 
 
+  nginx:
+    container_name: videochat_nginx
+    image: nginx
+    volumes:
+      - ../client_next/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8080:80"
+
 #  livekit:
 #    container_name: videochat_livekit
 #    build: ../livekit
