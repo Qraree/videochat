@@ -4,8 +4,15 @@ import {IMessage} from "@/types/IMessage";
 import Message from "@/components/Message";
 import {useRouter} from "next/navigation";
 import {socket} from "@/socket";
-import {LiveKitRoom, VideoConference, ControlBar, RoomAudioRenderer} from "@livekit/components-react";
-import { Room } from 'livekit-client'
+import {
+    LiveKitRoom,
+    VideoConference,
+    ControlBar,
+    RoomAudioRenderer,
+    TrackToggle,
+    useLocalParticipant, useTrackToggle, useParticipants
+} from "@livekit/components-react";
+import {Room, Track} from 'livekit-client'
 import Stage from "@/components/Stage";
 
 const RoomComponent = () => {
@@ -14,6 +21,8 @@ const RoomComponent = () => {
     const [livekitToken, setLivekitToken] = useState('');
     const router = useRouter();
     const messageListRef = useRef(null);
+    // useLocalParticipant()
+
 
     const [room] = useState(new Room());
     const [isConnected, setIsConnected] = useState(false);
@@ -60,10 +69,11 @@ const RoomComponent = () => {
     }
 
     const exitRoom = () => {
-        socket.emit("exitRoom");
-        sessionStorage.clear();
-        window.location.reload();
         router.push('/login');
+        setIsConnected(false);
+        window.location.reload();
+        // sessionStorage.clear();
+
     }
 
     function sendMessage(e: React.FormEvent<HTMLFormElement>) {
@@ -92,16 +102,18 @@ const RoomComponent = () => {
                         connect={true}
                         video={true}
                         audio={true}
+                        className="h-full flex flex-col items-center"
                     >
                         <RoomAudioRenderer />
                         {isConnected && <Stage />}
-                        {/*<VideoConference />*/}
-                        <ControlBar />
+                        <div className="w-2/12 h-12 bg-amber-200 flex flex-row justify-around text-black">
+                            <TrackToggle source={Track.Source.Camera} showIcon={true} />
+                            <TrackToggle source={Track.Source.Microphone} showIcon={true} />
+                            <button onClick={exitRoom} className="bg-sky-500 rounded-lg text-white p-2">Exit</button>
+                        </div>
+                        {/*<ControlBar className="flex flex-row"/>*/}
                     </LiveKitRoom>
 
-                </div>
-                <div className="w-2/12 h-12 bg-amber-200 flex flex-row justify-center text-black">
-                    <button onClick={exitRoom}>Exit</button>
                 </div>
             </div>
             <div className="w-1/5 h-full">
@@ -122,7 +134,6 @@ const RoomComponent = () => {
                     <button className="p-3 bg-blue-700 rounded-lg">Send</button>
                 </form>
             </div>
-
         </div>
     );
 };

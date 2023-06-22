@@ -53,11 +53,11 @@ io.on("connection", (socket) => {
     })
 
     socket.on("exitRoom", () => {
-        roomStack.pop();
         console.log(roomStack);
     })
 
     socket.on("disconnect", () => {
+        roomStack.pop();
         console.log("user was disconnected");
     })
 });

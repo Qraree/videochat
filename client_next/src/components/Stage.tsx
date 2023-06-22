@@ -4,12 +4,13 @@ import {
     GridLayout,
     ParticipantName,
     TrackContext,
-    TrackMutedIndicator,
+    TrackMutedIndicator, useParticipants,
     useTracks,
     VideoTrack
 } from "@livekit/components-react";
 import {Track} from "livekit-client";
 import {isTrackReference} from "@livekit/components-core";
+import classNames from "classnames";
 
 const Stage = () => {
     const tracks = useTracks([
@@ -17,28 +18,37 @@ const Stage = () => {
         { source: Track.Source.ScreenShare, withPlaceholder: false },
     ]);
 
+    const participants = useParticipants();
+
     return (
-        <div>
-            <GridLayout tracks={tracks} >
+        <div className="border-gray-500 border-2 h-full flex justify-center">
+            <GridLayout
+                tracks={tracks}
+                // className="grid grid-cols-2 grid-rows-2 p-3"
+                className={classNames({
+                    "flex justify-center items-center p-3": participants.length === 1,
+                    "flex justify-around items-center p-3 gap-px": participants.length === 2,
+                    "grid grid-cols-2 grid-rows-2 p-3": participants.length === 4 || participants.length === 3
+                })}
+            >
                 <TrackContext.Consumer>
                     {(track) =>
                         track && (
-                            <div className="w-1/6 h-1/6">
+                            <div className="w-4/6 h-4/6">
                                 {/*{isTrackReference(track) ? <VideoTrack {...track} /> : <p>Camera placeholder</p>}*/}
                                 <VideoTrack {...track}/>
-                                <div>
-                                    <div style={{ display: 'flex' }}>
+                                <div className="flex w-full justify-between p-2">
+                                    <ParticipantName className="text-xl"/>
+                                    <div className="flex w-2/12 justify-between">
                                         <TrackMutedIndicator source={Track.Source.Microphone}></TrackMutedIndicator>
                                         <TrackMutedIndicator source={track.source}></TrackMutedIndicator>
                                     </div>
-                                    <ParticipantName />
                                 </div>
                             </div>
                         )
                     }
                 </TrackContext.Consumer>
             </GridLayout>
-
         </div>
     );
 };
