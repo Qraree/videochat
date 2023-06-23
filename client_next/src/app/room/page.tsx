@@ -68,11 +68,9 @@ const RoomComponent = () => {
         setMessageInput(e.target.value);
     }
 
-    const exitRoom = () => {
-        router.push('/login');
-        setIsConnected(false);
-        window.location.reload();
-        // sessionStorage.clear();
+    const exitRoom = async () => {
+        await router.push('/login');
+        await window.location.reload();
 
     }
 
@@ -92,8 +90,8 @@ const RoomComponent = () => {
 
     return (
         <div className="w-full h-screen text-white bg-stone-800 mt-0 relative overflow-auto flex flex-row">
-            <div className="w-5/6 h-full bg-red-200 flex flex-col justify-center items-center">
-                <div className="w-10/12 h-4/5 bg-sky-500 mb-5"  >
+            <div className="w-5/6 h-full bg-stone-800 flex flex-col justify-center items-center">
+                <div className="w-10/12 h-5/6 bg-stone-800 mb-5"  >
                     <LiveKitRoom
                         room={room}
                         serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
@@ -106,9 +104,9 @@ const RoomComponent = () => {
                     >
                         <RoomAudioRenderer />
                         {isConnected && <Stage />}
-                        <div className="w-2/12 h-12 bg-amber-200 flex flex-row justify-around text-black">
-                            <TrackToggle source={Track.Source.Camera} showIcon={true} />
-                            <TrackToggle source={Track.Source.Microphone} showIcon={true} />
+                        <div className="w-2/12 h-12 bg-stone-800 flex flex-row justify-around text-white">
+                            <TrackToggle source={Track.Source.Camera} showIcon={true}/>
+                            <TrackToggle source={Track.Source.Microphone} showIcon={true}/>
                             <button onClick={exitRoom} className="bg-sky-500 rounded-lg text-white p-2">Exit</button>
                         </div>
                         {/*<ControlBar className="flex flex-row"/>*/}
@@ -119,17 +117,17 @@ const RoomComponent = () => {
             <div className="w-1/5 h-full">
 
             </div>
-            <div className="absolute h-full w-1/5 right-0 top-0 bg-stone-900 flex flex-col">
+            <div className="absolute h-full w-1/5 right-0 top-0 bg-stone-900 flex flex-col border-l-2 border-l-white-50">
                 <div className="text-2xl py-4 pl-3">
                     Chat
                 </div>
                 <hr />
-                <div className="h-4/5 bg-sky-500 p-2 flex flex-col overflow-y-scroll no-scrollbar" ref={messageListRef}>
+                <div className="h-4/5 bg-stone-700 p-2 flex flex-col overflow-y-scroll no-scrollbar" ref={messageListRef}>
                     {messages.map((message) => (
                         <Message message={message} username={userName} key={message._id}/>
                     ))}
                 </div>
-                <form className="h-24 bg-red-500 flex flex-row justify-around items-center" onSubmit={(e) => sendMessage(e)}>
+                <form className="h-24 bg-stone-900 flex flex-row justify-around items-center" onSubmit={(e) => sendMessage(e)}>
                     <input className="p-3 rounded-lg text-black" value={messageInput} onChange={(e) => messageChange(e)}/>
                     <button className="p-3 bg-blue-700 rounded-lg">Send</button>
                 </form>

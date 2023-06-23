@@ -21,20 +21,22 @@ const Stage = () => {
     const participants = useParticipants();
 
     return (
-        <div className="border-gray-500 border-2 h-full flex justify-center">
+        <div className="h-full flex justify-center items-center">
             <GridLayout
                 tracks={tracks}
                 // className="grid grid-cols-2 grid-rows-2 p-3"
                 className={classNames({
                     "flex justify-center items-center p-3": participants.length === 1,
-                    "flex justify-around items-center p-3 gap-px": participants.length === 2,
-                    "grid grid-cols-2 grid-rows-2 p-3": participants.length === 4 || participants.length === 3
+                    "flex justify-around items-center p-3": participants.length === 2,
+                    "grid grid-cols-2 grid-rows-2 p-2": participants.length === 4 || participants.length === 3,
                 })}
             >
                 <TrackContext.Consumer>
                     {(track) =>
                         track && (
-                            <div className="w-4/6 h-4/6">
+                            <div
+                                className="w-5/6 h-5/6"
+                            >
                                 {/*{isTrackReference(track) ? <VideoTrack {...track} /> : <p>Camera placeholder</p>}*/}
                                 <VideoTrack {...track}/>
                                 <div className="flex w-full justify-between p-2">
