@@ -8,8 +8,10 @@ services:
     env_file: ../client_next/.env.production.local
     restart: unless-stopped
     environment:
-      - VIRTUAL_HOST=localhost
+      - VIRTUAL_HOST=45.146.165.149
+      - LETSENCRYPT_HOST=45.146.165.149
       - VIRTUAL_PORT=3000
+      - LETSENCRYPT_EMAIL=metbezu@gmail.com
     ports:
       - "3000:3000"
 
@@ -30,15 +32,18 @@ services:
     restart: unless-stopped
     image: mongo:4
 
-  nginx-proxy:
-    container_name: videochat_nginx_proxy
-    image: jwilder/nginx-proxy
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    ports:
-      - "80:80"
-      - "443:443"
+#  nginx-proxy:
+#    container_name: videochat_nginx_proxy
+#    image: jwilder/nginx-proxy
+#    restart: unless-stopped
+#    volumes:
+#      - /var/run/docker.sock:/tmp/docker.sock:ro
+#      - /path/to/certs:/etc/nginx/certs
+#      - vhost:/etc/nginx/vhost.d
+#      - html:/usr/share/nginx/html
+#    ports:
+#      - "80:80"
+#      - "443:443"
 
 #  nginx:
 #    container_name: videochat_nginx
