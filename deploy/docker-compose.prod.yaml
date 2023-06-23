@@ -7,6 +7,9 @@ services:
     build: ../client_next
     env_file: ../client_next/.env.production.local
     restart: unless-stopped
+    environment:
+      - VIRTUAL_HOST=localhost
+      - VIRTUAL_PORT=3000
     ports:
       - "3000:3000"
 
