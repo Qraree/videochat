@@ -38,6 +38,11 @@ services:
     networks:
       - reverse-proxy
 
+networks:
+  reverse-proxy:
+    driver: bridge
+
+
 #  nginx-proxy:
 #    container_name: videochat_nginx_proxy
 #    image: jwilder/nginx-proxy
