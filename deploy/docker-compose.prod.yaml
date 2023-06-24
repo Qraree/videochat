@@ -14,6 +14,8 @@ services:
       - LETSENCRYPT_EMAIL=metbezu@gmail.com
     ports:
       - "3000:3000"
+    networks:
+      - reverse-proxy
 
   backend:
     container_name: videochat_backend
@@ -26,11 +28,15 @@ services:
       - mongo
     depends_on:
       - mongo
+    networks:
+      - reverse-proxy
 
   mongo:
     container_name: videochat_mongodb
     restart: unless-stopped
     image: mongo:4
+    networks:
+      - reverse-proxy
 
 #  nginx-proxy:
 #    container_name: videochat_nginx_proxy
