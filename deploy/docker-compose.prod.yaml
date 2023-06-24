@@ -9,8 +9,8 @@ services:
     restart: unless-stopped
     environment:
       - VIRTUAL_HOST=45.146.165.149
-      - LETSENCRYPT_HOST=45.146.165.149
       - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=45.146.165.149
       - LETSENCRYPT_EMAIL=metbezu@gmail.com
     ports:
       - "3000:3000"
@@ -44,6 +44,12 @@ services:
 #    ports:
 #      - "80:80"
 #      - "443:443"
+#
+#  nginx-letsencrypt:
+#    container_name: videochat_nginx_letsencrypt
+#    image: jrcs/letsencrypt-nginx-proxy-companion
+#    restart: always
+#
 
 #  nginx:
 #    container_name: videochat_nginx
