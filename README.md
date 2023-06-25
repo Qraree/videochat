@@ -1,7 +1,22 @@
 ## Video chat
+Simple video chat with livekit.
 
+### Stack:
 - Livekit
 - Socket.io
 - Express
-- React
+- Next.js 13
 - Typescript
+- tailwind
+
+### Deploy
+- Ubuntu 22.04
+- docker-compose
+- nginx-proxy
+- ssl certificate with let's encrypt
+
+[website link](dddsqrt-videochat.ru)
+
+### TODO
+- CI/CD with Github actions
+- Styling
