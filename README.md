@@ -20,3 +20,4 @@ Simple video chat with livekit.
 ### TODO
 - CI/CD with Github actions
 - Styling
+- Tests
