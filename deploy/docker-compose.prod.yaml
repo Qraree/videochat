@@ -8,9 +8,9 @@ services:
     env_file: ../client_next/.env.production.local
     restart: unless-stopped
     environment:
-      - VIRTUAL_HOST=dddsqrt-videochat.ru
+      - VIRTUAL_HOST=45.146.165.149
       - VIRTUAL_PORT=3000
-      - LETSENCRYPT_HOST=dddsqrt-videochat.ru
+      - LETSENCRYPT_HOST=45.146.165.149
       - LETSENCRYPT_EMAIL=metbezu@gmail.com
     ports:
       - "3000:3000"
@@ -40,8 +40,8 @@ services:
 
 networks:
   reverse-proxy:
-    external:
-      name: reverse-proxy
+    external: true
+
 
 
 #  nginx-proxy:
