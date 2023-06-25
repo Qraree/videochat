@@ -11,8 +11,12 @@ services:
     environment:
       - VIRTUAL_HOST=localhost
       - VIRTUAL_PORT=3000
+      - LETSENCRYPT_HOST=dddsqrt-videochat.ru
+      - LETSENCRYPT_EMAIL=metbezu@gmail.com
     ports:
       - "3000:3000"
+    networks:
+      - reverse-proxy
 
   backend:
     container_name: videochat_backend
@@ -26,20 +30,30 @@ services:
       - mongo
     depends_on:
       - mongo
+    networks:
+      - reverse-proxy
 
   mongo:
     container_name: videochat_mongodb
     image: mongo:4
+    networks:
+      - reverse-proxy
 
-  nginx-proxy:
-    container_name: videochat_nginx_proxy
-    image: jwilder/nginx-proxy
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    ports:
-      - "8080:80"
-      - "443:443"
+
+
+networks:
+  reverse-proxy:
+    external: true
+
+#  nginx-proxy:
+#    container_name: videochat_nginx_proxy
+#    image: jwilder/nginx-proxy
+#    restart: unless-stopped
+#    volumes:
+#      - /var/run/docker.sock:/tmp/docker.sock:ro
+#    ports:
+#      - "8080:80"
+#      - "443:443"
 
 #  nginx:
 #    container_name: videochat_nginx

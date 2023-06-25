@@ -22,6 +22,11 @@ services:
     build: ../backend
     env_file: ../backend/.env
     restart: unless-stopped
+    environment:
+      - VIRTUAL_HOST=api.dddsqrt-videochat.ru
+      - VIRTUAL_PORT=5000
+      - LETSENCRYPT_HOST=api.dddsqrt-videochat.ru
+      - LETSENCRYPT_EMAIL=metbezu@gmail.com
     ports:
       - "5000:5000"
     links:
