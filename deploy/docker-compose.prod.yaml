@@ -38,24 +38,25 @@ services:
     networks:
       - reverse-proxy
 
+
+  nginx-proxy:
+    container_name: videochat_nginx_proxy
+    image: jwilder/nginx-proxy
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /path/to/certs:/etc/nginx/certs
+      - vhost:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+    ports:
+      - "80:80"
+      - "443:443"
+
 networks:
   reverse-proxy:
     external: true
 
 
-
-#  nginx-proxy:
-#    container_name: videochat_nginx_proxy
-#    image: jwilder/nginx-proxy
-#    restart: unless-stopped
-#    volumes:
-#      - /var/run/docker.sock:/tmp/docker.sock:ro
-#      - /path/to/certs:/etc/nginx/certs
-#      - vhost:/etc/nginx/vhost.d
-#      - html:/usr/share/nginx/html
-#    ports:
-#      - "80:80"
-#      - "443:443"
 #
 #  nginx-letsencrypt:
 #    container_name: videochat_nginx_letsencrypt
