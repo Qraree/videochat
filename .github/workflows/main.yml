@@ -1,0 +1,7 @@
+name: videochat workflow
+on: [push]
+jobs:
+  print:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo Hello World!
