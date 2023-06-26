@@ -1,7 +1,27 @@
 name: videochat workflow
 on: [push]
 jobs:
-  print:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-    - run: echo Hello World!
+      - uses: D3rHase/ssh-command-action@v0.2.2
+        with:
+          host: ${{secrets.DEPLOY_SSH_HOST}}
+          user: ${{secrets.DEPLOY_USERNAME}}
+          private_key: ${{secrets.DEPLOY_SSH_PASSWORD}}
+          command: |
+            echo '--- START WORK ON REMOTE SERVER ---';
+            cd ${{ secrets.DEPLOY_WORKDIR }};
+            echo '--- LIST OF FILES ---';
+            ls -al;
+            git pull;
+            cd deploy/
+            echo '--- DOCKER OPERATIONS ---';
+            docker-compose -f docker-compose.prod.yaml down;
+            echo '--- LIST OF DOCKER CONTAINERS AFTER STOPING DOCKER CONTAINERS ---';
+            docker ps;
+            echo '--- BUILDING NEW IMAGES ---';
+            docker-compose -f docker-compose.prod.yaml down;
+            docker-compose -f docker-compose.prod.yaml up -d;
+            echo '--- LIST OF DOCKER CONTAINERS AFTER STARTING DOCKER CONTAINERS ---';
+            docker ps;
