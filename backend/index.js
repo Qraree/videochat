@@ -23,7 +23,7 @@ io.on("connection", (socket) => {
     console.log("client connected");
 
     socket.on("message", (...args) => {
-        socket.emit("server-message", "WHAT DssdO YOU hWANT??");
+        socket.emit("server-message", "WHAT DssdyO YOU hWANT??");
     });
 
     socket.on("chatEnter", async (name) => {
