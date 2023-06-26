@@ -1,6 +1,8 @@
 ## Video chat
 Simple video chat with livekit.
 
+![alt videochat image](https://github.com/Qraree/assets/blob/main/chat.jpg)
+
 ### Stack:
 - Livekit
 - Socket.io
