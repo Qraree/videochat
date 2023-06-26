@@ -17,7 +17,7 @@ Simple video chat with livekit.
 - nginx-proxy
 - ssl certificate with let's encrypt
 
-[website link](dddsqrt-videochat.ru)
+[website link](https://dddsqrt-videochat.ru)
 
 ### TODO
 - CI/CD with Github actions
