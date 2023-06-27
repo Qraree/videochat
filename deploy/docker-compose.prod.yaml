@@ -48,31 +48,3 @@ networks:
   reverse-proxy:
     external: true
 
-
-#
-#  nginx-letsencrypt:
-#    container_name: videochat_nginx_letsencrypt
-#    image: jrcs/letsencrypt-nginx-proxy-companion
-#    restart: always
-#
-
-#  nginx:
-#    container_name: videochat_nginx
-#    image: nginx
-#    restart: unless-stopped
-#    volumes:
-#      - ../client_next/nginx/nginx.conf:/etc/nginx/nginx.conf
-#    ports:
-#      - "80:80"
-
-
-
-
-#  livekit:
-#    container_name: videochat_livekit
-#    build: ../livekit
-#    ports:
-#      - "7880:7880"
-#      - "7881:7881"
-#      - "7882:7882/udp"
-#      - "50000-60000:50000-60000"
