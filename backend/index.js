@@ -32,13 +32,17 @@ io.on("connection", (socket) => {
     })
 
     socket.on("getToken", (name) => {
-        const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, {
-            identity: name,
-        });
-        at.addGrant({ roomJoin: true, room: roomName, canPublish: true, canSubscribe: true });
-        const token = at.toJwt();
+        try {
+            const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, {
+                identity: name,
+            });
+            at.addGrant({ roomJoin: true, room: roomName, canPublish: true, canSubscribe: true });
+            const token = at.toJwt();
 
-        socket.emit('serverToken', token)
+            socket.emit('serverToken', token)
+        } catch(e) {
+            console.log("livekit identity error")
+        }
     })
 
     socket.on("getAllMessages", async () => {
