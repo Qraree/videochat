@@ -19,5 +19,6 @@ jobs:
             cd deploy/
             docker compose -f docker-compose.prod.yaml up -d --force-recreate --build
             docker ps
-            docker image prune
-            docker volume prune
+            docker image prune -f
+            docker volume prune -f
+            docker builder prune -f
