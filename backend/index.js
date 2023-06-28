@@ -1,12 +1,15 @@
 require("dotenv").config();
 const express = require('express');
 const { createServer } = require("http");
-const cors = require('cors')
 const mongoose = require('mongoose');
-const Message = require('./models/Message');
 const { Server } = require("socket.io");
 const { AccessToken } = require('livekit-server-sdk');
-// const { getLivekitToken } = require('./services/getLivekitToken')
+const {CONNECTION, DISCONNECT} = require('./const/socketEvents')
+
+const newMessageHandler = require('./socketHandlers/messageHandler');
+const fetchingDataHandler = require('./socketHandlers/fetchingDataHandler');
+const getTokenHandler = require('./socketHandlers/getTokenHandler');
+const newUserHandler = require('./socketHandlers/newUserHandler');
 
 
 const app = express();
@@ -16,52 +19,17 @@ const io =  new Server(httpServer, {
         origin: "*"
     }});
 
-const roomStack = [];
-const roomName = 'room';
+const users = [];
 
-io.on("connection", (socket) => {
-    console.log("client connected");
+io.on(CONNECTION, (socket) => {
 
-    socket.on("message", (...args) => {
-        socket.emit("server-message", "WHAT DssdyO YOU hWANT??");
-    });
+    newUserHandler(socket, users);
+    getTokenHandler(socket);
+    fetchingDataHandler(socket);
+    newMessageHandler(socket, io);
 
-    socket.on("chatEnter", async (name) => {
-        console.log(`${name} entered the chat!`)
-        roomStack.push(name);
-    })
-
-    socket.on("getToken", (name) => {
-        try {
-            const at = new AccessToken(process.env.LIVEKIT_API_KEY, process.env.LIVEKIT_API_SECRET, {
-                identity: name,
-            });
-            at.addGrant({ roomJoin: true, room: roomName, canPublish: true, canSubscribe: true });
-            const token = at.toJwt();
-
-            socket.emit('serverToken', token)
-        } catch(e) {
-            console.log("livekit identity error")
-        }
-    })
-
-    socket.on("getAllMessages", async () => {
-        const messages = await Message.find({});
-        console.log(messages);
-        socket.emit("allMessages", messages);
-    })
-
-    socket.on("sendMessage", async (message) => {
-        await Message.create(message)
-        io.emit("sendMessageServer", message)
-    })
-
-    socket.on("exitRoom", () => {
-        console.log(roomStack);
-    })
-
-    socket.on("disconnect", () => {
-        roomStack.pop();
+    socket.on(DISCONNECT, () => {
+        users.pop();
         console.log("user was disconnected");
     })
 });

@@ -16,10 +16,10 @@ Simple video chat with livekit.
 - docker-compose
 - nginx-proxy
 - ssl certificate with let's encrypt
+- CI/CD with Github actions
 
 [website link](https://dddsqrt-videochat.ru)
 
 ### TODO
-- CI/CD with Github actions
 - Styling
 - Tests
