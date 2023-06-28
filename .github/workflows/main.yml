@@ -17,10 +17,8 @@ jobs:
             git pull
             echo "MOVING TO DEPLOY DIR"
             cd deploy/
-            echo "STOP CONTAINERS"
-            docker compose -f docker-compose.prod.yaml down
-            echo "BUILDING IMAGES"
-            docker compose -f docker-compose.prod.yaml build
-            echo "STARTING CONTAINERS"
-            docker compose -f docker-compose.prod.yaml up -d
+            docker compose -f docker-compose.prod.yaml up -d --force-recreate --build
             docker ps
+            docker image prune -f
+            docker volume prune -f
+            docker builder prune -f
