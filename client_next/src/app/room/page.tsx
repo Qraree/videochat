@@ -1,57 +1,60 @@
 "use client"
 import React, {useEffect, useRef, useState} from 'react';
+import {Room, Track} from 'livekit-client'
+import {useRouter} from "next/navigation";
 import {IMessage} from "@/types/IMessage";
 import Message from "@/components/Message";
-import {useRouter} from "next/navigation";
 import {socket} from "@/socket";
 import {
     LiveKitRoom,
-    VideoConference,
-    ControlBar,
     RoomAudioRenderer,
     TrackToggle,
-    useLocalParticipant, useTrackToggle, useParticipants
 } from "@livekit/components-react";
-import {Room, Track} from 'livekit-client'
 import Stage from "@/components/Stage";
+import {SOCKET_EVENTS} from "@/const/socketEvents";
+import {COMMON, PATH} from "@/const/common";
 
 const RoomComponent = () => {
     const [messageInput, setMessageInput] = useState<string>('');
     const [userName, setUserName] = useState<string>('');
     const [livekitToken, setLivekitToken] = useState('');
     const router = useRouter();
-    const messageListRef = useRef(null);
-    // useLocalParticipant()
+    const messageListRef = useRef<any>();
 
 
     const [room] = useState(new Room());
     const [isConnected, setIsConnected] = useState(false);
-    const [connect, setConnect] = useState(false);
-
     const [messages, setMessages] = useState<IMessage[]>([])
 
     useEffect(() => {
-        const name = sessionStorage.getItem("username");
-        socket.emit("getAllMessages");
-        socket.emit("getToken", name);
+        console.log(messageListRef.current)
+        const objDiv = messageListRef.current
+        if (objDiv) {
+            objDiv.scrollTop = objDiv.scrollHeight;
+        }
+    })
+
+    useEffect(() => {
+        const name = sessionStorage.getItem(COMMON.USERNAME);
+        socket.emit(SOCKET_EVENTS.GET_ALL_MESSAGES);
+        socket.emit(SOCKET_EVENTS.GET_TOKEN, name);
     }, [])
 
     useEffect(() => {
-        socket.on("allMessages", (messages) => {
+        socket.on(SOCKET_EVENTS.ALL_MESSAGES_FROM_SERVER, (messages) => {
             setMessages(messages);
         })
 
-        socket.on("serverToken", (token) => {
-            console.log(token);
+        socket.on(SOCKET_EVENTS.TOKEN_FROM_SERVER, (token) => {
             setLivekitToken(token);
         })
 
     }, [socket])
 
     useEffect(() => {
-        const name = sessionStorage.getItem("username");
+        const name = sessionStorage.getItem(COMMON.USERNAME);
         if (!name) {
-            router.push('/login');
+            router.push(PATH.LOGIN);
         } else {
             setUserName(name);
         }
@@ -59,7 +62,7 @@ const RoomComponent = () => {
     }, [router])
 
     useEffect(() => {
-        socket.on("sendMessageServer", (message) => {
+        socket.on(SOCKET_EVENTS.SEND_MESSAGE_TO_ALL, (message) => {
             setMessages([...messages, message]);
         })
     }, [socket, messages])
@@ -69,7 +72,7 @@ const RoomComponent = () => {
     }
 
     const exitRoom = async () => {
-        await router.push('/login');
+        await router.push(PATH.LOGIN);
         await window.location.reload();
 
     }
@@ -84,7 +87,7 @@ const RoomComponent = () => {
             time: `${date.getHours()}:${date.getMinutes()}`,
         }
 
-        socket.emit("sendMessage", newMessage);
+        socket.emit(SOCKET_EVENTS.SEND_MESSAGE, newMessage);
         setMessageInput('');
     }
 
@@ -109,7 +112,6 @@ const RoomComponent = () => {
                             <TrackToggle source={Track.Source.Microphone} showIcon={true}/>
                             <button onClick={exitRoom} className="bg-sky-500 rounded-lg text-white p-2">Exit</button>
                         </div>
-                        {/*<ControlBar className="flex flex-row"/>*/}
                     </LiveKitRoom>
 
                 </div>

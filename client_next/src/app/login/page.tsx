@@ -2,21 +2,22 @@
 import React, {useState} from 'react';
 import {socket} from "@/socket";
 import {useRouter} from "next/navigation";
+import {SOCKET_EVENTS} from "@/const/socketEvents";
+import {COMMON, PATH} from "@/const/common";
 
 const Login = () => {
 
     const [nameInput, setNameInput] = useState<string>('');
     const router = useRouter();
 
-
     const changeInput = (e:React.ChangeEvent<HTMLInputElement>) => {
         setNameInput(e.target.value);
     }
 
     const enterRoom = () => {
-        router.push('room');
-        socket.emit("chatEnter", nameInput);
-        sessionStorage.setItem("username", nameInput);
+        router.push(PATH.ROOM);
+        socket.emit(SOCKET_EVENTS.ENTER_CHAT, nameInput);
+        sessionStorage.setItem(COMMON.USERNAME, nameInput);
     }
 
     return (
